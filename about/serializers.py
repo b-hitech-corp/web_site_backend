@@ -1,4 +1,4 @@
-from .models import AboutServices, Header, Achievement
+from .models import AboutServices, Header, Achivement
 from rest_framework import serializers
 
 class HeaderSerializer(serializers.ModelSerializer):
@@ -6,8 +6,7 @@ class HeaderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Header
-        fields = ['video_link_url', 'header_image_url', 'title', 'description']
-
+        fields = '__all__'
 
 
 class AboutServicesSerializer(serializers.ModelSerializer):
@@ -17,9 +16,8 @@ class AboutServicesSerializer(serializers.ModelSerializer):
         fields = ['title', 'description']
 
 
-
 class AchivementSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Achievement
+        model = Achivement
         fields = '__all__'

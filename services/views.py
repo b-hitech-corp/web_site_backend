@@ -12,4 +12,4 @@ class ServicesViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Services.objects.order_by('service_name')
+        return Services.objects.order_by('service_name_Fr')

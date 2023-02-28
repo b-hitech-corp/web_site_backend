@@ -14,10 +14,10 @@ class FeedBackViewSet(ModelViewSet):
         return FeedBack.objects.order_by('customer_name')
     
 
-class HeaderViewSet(ModelViewSet):
+class HomeHeaderViewSet(ModelViewSet):
     serializer_class = HeaderSerializer
     parser_classes = (MultiPartParser, FormParser)
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Header.objects.order_by('title')
+        return Header.objects.order_by('title_Fr')
