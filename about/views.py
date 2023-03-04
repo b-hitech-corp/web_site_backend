@@ -12,7 +12,7 @@ class AboutHeaderViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Header.objects.order_by('title_Fr')
+        return Header.objects.all()
 
 
 
@@ -22,7 +22,7 @@ class AboutServicesViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return AboutServices.objects.order_by('title_Fr')
+        return AboutServices.objects.all()
     
 
 

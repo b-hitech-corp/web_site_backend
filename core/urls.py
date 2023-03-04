@@ -15,14 +15,14 @@ router = routers.DefaultRouter()
 
 
 router.register('home', HomeHeaderViewSet, basename='header')
-router.register('home/feedback', FeedBackViewSet, basename='feedback')
+router.register('home-feedback', FeedBackViewSet, basename='feedback')
 
 router.register('teams', TeamsHeaderViewSet, basename='team-header')
-router.register('teams/member', MemberViewSet, basename='member')
+router.register('teams-member', MemberViewSet, basename='member')
 
 router.register('about', AboutHeaderViewSet, basename='about-header')
-router.register('about/achivement', AchivementViewSet, basename='achivement')
-router.register('about/services', AboutServicesViewSet, basename='about-services')
+router.register('about-achivement', AchivementViewSet, basename='achivement')
+router.register('about-services', AboutServicesViewSet, basename='about-services')
 
 router.register('services', ServicesViewSet, basename='services')
 router.register('contact', ContactViewSet, basename='contact')

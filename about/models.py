@@ -16,7 +16,7 @@ class Header(TimeStampBaseModel, InfoModel):
 class AboutServices(TimeStampBaseModel, InfoModel):
 
     def __str__(self):
-        return str(self.title_Fr)
+        return str(self.id)
     
 
 
@@ -27,4 +27,4 @@ class Achivement(TimeStampBaseModel):
     bands_joined = models.IntegerField(default=0)
     
     def __str__(self):
-        return str(self.title_Fr)
+        return str(self.project_completed)
