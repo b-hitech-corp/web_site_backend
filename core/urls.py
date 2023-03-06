@@ -4,10 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
-from teams.views import TeamsHeaderViewSet, MemberViewSet
-from home.views import FeedBackViewSet, HomeHeaderViewSet
+from teams.views import *
+from home.views import *
 from about.views import *
-from services.views import ServicesViewSet
+from services.views import *
 from contact.views import ContactViewSet
 
 
@@ -17,11 +17,11 @@ router = routers.DefaultRouter()
 router.register('home', HomeHeaderViewSet, basename='header')
 router.register('home-feedback', FeedBackViewSet, basename='feedback')
 
-router.register('teams', TeamsHeaderViewSet, basename='team-header')
 router.register('teams-member', MemberViewSet, basename='member')
 
 router.register('about', AboutHeaderViewSet, basename='about-header')
 router.register('about-achivement', AchivementViewSet, basename='achivement')
+router.register('about-mission', HistoryAndMissionViewSet, basename='missions-history')
 router.register('about-services', AboutServicesViewSet, basename='about-services')
 
 router.register('services', ServicesViewSet, basename='services')

@@ -14,3 +14,7 @@ class HeaderAdmin(admin.ModelAdmin):
 @admin.register(Achivement)
 class AchivementAdmin(admin.ModelAdmin):
 	list_achivement='__all__'
+
+@admin.register(HistoryAndMission)
+class HistoryAndMissionAdmin(admin.ModelAdmin):
+	list_mission='__all__'

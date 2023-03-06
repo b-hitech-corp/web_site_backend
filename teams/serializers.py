@@ -1,4 +1,4 @@
-from .models import Member, Header
+from .models import Member
 from rest_framework import serializers
 
 class MemberSerializer(serializers.ModelSerializer):
@@ -10,9 +10,9 @@ class MemberSerializer(serializers.ModelSerializer):
 
 
 
-class HeaderSerializer(serializers.ModelSerializer):
-    header_image_url = serializers.ImageField(required=True)
+# class HeaderSerializer(serializers.ModelSerializer):
+#     header_image_url = serializers.ImageField(required=True)
 
-    class Meta:
-        model = Header
-        fields = '__all__'
+#     class Meta:
+#         model = Header
+#         fields = '__all__'

@@ -5,7 +5,7 @@ from core.utils import InfoModel, TimeStampBaseModel
 
 # Create your models here.
 
-class Member(TimeStampBaseModel, InfoModel):
+class Member(TimeStampBaseModel):
     member_image_url = models.ImageField(upload_to=upload_to, blank=True, null=True)
     member_name = models.CharField(max_length=80, blank=False, null=False)
     member_email = models.EmailField(_('email address'), db_index=True)
@@ -21,10 +21,10 @@ class Member(TimeStampBaseModel, InfoModel):
         return f"{self.member_name}-({self.member_email}-({self.occupation_Fr})"
     
 
-class Header(TimeStampBaseModel):
-    header_image_url = models.ImageField(upload_to=upload_to, blank=False, null=False)
-    title_Fr = models.CharField(max_length=80, blank=False, null=False)
-    title_En = models.CharField(max_length=80, blank=False, null=False)
+# class Header(TimeStampBaseModel):
+#     header_image_url = models.ImageField(upload_to=upload_to, blank=False, null=False)
+#     title_Fr = models.CharField(max_length=80, blank=False, null=False)
+#     title_En = models.CharField(max_length=80, blank=False, null=False)
 
-    def __str__(self):
-        return str(self.title_Fr)
+#     def __str__(self):
+#         return str(self.title_Fr)

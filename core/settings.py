@@ -177,6 +177,7 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS: config('CORS_ALLOW_ALL_ORIGINS', cast=bool)
+# print(config('CORS_ALLOW_ALL_ORIGINS', cast=bool))
 
 #Email Config
 EMAIL_HOST = 'smtp.gmail.com'

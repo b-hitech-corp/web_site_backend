@@ -1,5 +1,5 @@
-from .models import AboutServices, Header
-from .serializers import AboutServicesSerializer, HeaderSerializer, AchivementSerializer
+from .models import AboutServices, Header, HistoryAndMission, Achivement
+from .serializers import AboutServicesSerializer, HeaderSerializer, HistoryAndMissionSerializer, AchivementSerializer
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -12,7 +12,7 @@ class AboutHeaderViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Header.objects.all()
+        return Header.objects.order_by('created_at')
 
 
 
@@ -22,7 +22,7 @@ class AboutServicesViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return AboutServices.objects.all()
+        return AboutServices.objects.order_by('created_at')
     
 
 
@@ -32,4 +32,13 @@ class AchivementViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return AboutServices.objects.all()
+        return Achivement.objects.order_by('created_at')
+    
+
+class HistoryAndMissionViewSet(ModelViewSet):
+    serializer_class = HistoryAndMissionSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return HistoryAndMission.objects.order_by('created_at')

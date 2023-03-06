@@ -11,7 +11,7 @@ class FeedBackViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return FeedBack.objects.order_by('customer_name')
+        return FeedBack.objects.order_by('created_at')
     
 
 class HomeHeaderViewSet(ModelViewSet):
@@ -20,4 +20,4 @@ class HomeHeaderViewSet(ModelViewSet):
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Header.objects.order_by('title_Fr')
+        return Header.objects.order_by('created_at')
