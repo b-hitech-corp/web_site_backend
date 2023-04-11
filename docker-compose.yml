@@ -1,0 +1,101 @@
+# tuto: https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
+# tuto: https://www.geeksforgeeks.org/how-to-dockerize-django-application-for-production-deployement-with-gunicorn-and-nginx/
+# tuto: https://blog.devgenius.io/dockerizing-django-application-gunicorn-and-nginx-5a74b250198f
+
+version: '3.9'
+# Defining the compose version
+services:
+
+ # Django application
+ web:
+ 
+   # Build context
+   build: .
+   
+   # Build commands
+   command: sh -c "python manage.py makemigrations about contact home services teams &&
+                   python manage.py migrate &&
+                   gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+                   
+   # Storage volumes
+   volumes:
+     - static_volume:/home/app/static
+     - media_volume:/home/app/media
+     
+   # Exposing port 8000
+   expose: 
+   - 8000
+   env_file:
+      - ./.env.dev
+   restart: "on-failure"
+
+ # Nginx server
+ nginx:
+ 
+   # Build context
+   build: ./nginx
+   
+   # Mapping machine and container ports
+   ports:
+     - 80:80
+     
+   # Storage volumes
+   volumes:
+     - static_volume:/home/app/static
+     - media_volume:/home/app/media
+   depends_on:
+     - web
+   restart: "on-failure"
+
+volumes:
+ static_volume:
+ media_volume:
+
+
+# version: '3.8'
+# services:
+#   web:
+#     # image: <docker-username>/<project-name>:<tag|latest>
+#     image: 29efb9a9dba494e919fb83e86a3e7d986a74acb60ac460450f355569d92e6f80
+#     #command: gunicorn --bind 0.0.0.0:8000 licensing_platform.wsgi --workers=4
+#     command: sh -c "python manage.py makemigrations &&
+#                     python manage.py migrate &&
+#                     gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+# #    environment:
+# #      - DEBUG
+# #      - DATABASE_NAME
+# #      - DATABASE_USER
+# #      - DATABASE_PASSWORD
+# #      - HOST_ENDPOINT
+# #      - REDIS_LOCATION
+#     volumes:
+#       - static_volume:/app/static
+#       - media_volume:/app/media
+#     expose:
+#       - "8000"
+#     networks:
+#       - django-network
+#   nginx:
+#     # image: <docker-username>/<nginx-for-project-name>:<tag|latest>
+#     image: 351ebd72ff8b94b3302e5be3585c6671032244cf3d4c051424facfc666c22643
+#     restart: always
+#     volumes:
+#       - static_volume:/app/static
+#       - media_volume:/app/media
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - web
+#     networks:
+#       - django-network
+# networks:
+#   django-network:
+#     name: django-network
+# volumes:
+#   media_volume:
+#   static_volume:
+
+#Command to start the docker containers:
+#  docker-compose up
+#Use the -d flag to run in the background:
+#  docker-compose -d up
