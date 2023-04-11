@@ -4,6 +4,7 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 venv
 .env
+.env.dev
 # 0001_initial.py
 
 # Local db
@@ -53,3 +54,7 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

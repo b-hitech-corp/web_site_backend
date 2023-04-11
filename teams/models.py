@@ -1,4 +1,5 @@
 from django.db import models
+from tinymce.models import HTMLField
 from django.utils.translation import gettext_lazy as _
 from core.staging import upload_to
 from core.utils import InfoModel, TimeStampBaseModel
@@ -14,8 +15,8 @@ class Member(TimeStampBaseModel):
     occupation_En = models.CharField(max_length=80, blank=False, null=False)
     experience_En = models.CharField(max_length=80, blank=False, null=False)
     experience_Fr = models.CharField(max_length=80, blank=False, null=False)
-    bio_En = models.TextField(blank=False, null=False)
-    bio_Fr = models.TextField(blank=False, null=False)
+    bio_En = HTMLField(blank=False, null=False)
+    bio_Fr = HTMLField(blank=False, null=False)
 
     def __str__(self):
         return f"{self.member_name}-({self.member_email}-({self.occupation_Fr})"
