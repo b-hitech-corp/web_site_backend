@@ -26,7 +26,7 @@ services:
     expose: 
     - 8000
     env_file:
-      - ./.env.dev
+      - ./.env
     restart: "on-failure"
 
  # Nginx server
