@@ -1,4 +1,5 @@
 from django.db import models
+from tinymce.models import HTMLField
 
 from core.staging import upload_to
 from core.utils import InfoModel, TimeStampBaseModel
@@ -19,6 +20,8 @@ class Header(TimeStampBaseModel, InfoModel):
 
 
 class AboutServices(TimeStampBaseModel, InfoModel):
+    description_En = HTMLField()
+    description_Fr = HTMLField()
 
     def __str__(self):
         return str(self.id)

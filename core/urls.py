@@ -29,6 +29,7 @@ router.register('contact', ContactViewSet, basename='contact')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tinymce/', include('tinymce.urls')),
     path('api/', include(router.urls))
 ]
 if settings.DEBUG:
