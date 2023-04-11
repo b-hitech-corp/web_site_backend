@@ -6,50 +6,50 @@ version: '3.9'
 # Defining the compose version
 services:
 
- # Django application
- web:
+  # Django application
+  web:
  
-   # Build context
-   build: .
-   
-   # Build commands
-   command: sh -c "python manage.py makemigrations about contact home services teams &&
-                   python manage.py migrate &&
-                   gunicorn core.wsgi:application --bind 0.0.0.0:8000"
-                   
-   # Storage volumes
-   volumes:
-     - static_volume:/home/app/static
-     - media_volume:/home/app/media
-     
-   # Exposing port 8000
-   expose: 
-   - 8000
-   env_file:
+    # Build context
+    build: .
+    
+    # Build commands
+    command: sh -c "python manage.py makemigrations about contact home services teams &&
+                    python manage.py migrate &&
+                    gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+                    
+    # Storage volumes
+    volumes:
+      - static_volume:/home/app/static
+      - media_volume:/home/app/media
+      
+    # Exposing port 8000
+    expose: 
+    - 8000
+    env_file:
       - ./.env.dev
-   restart: "on-failure"
+    restart: "on-failure"
 
  # Nginx server
- nginx:
+  nginx:
  
-   # Build context
-   build: ./nginx
-   
-   # Mapping machine and container ports
-   ports:
-     - 80:80
-     
-   # Storage volumes
-   volumes:
-     - static_volume:/home/app/static
-     - media_volume:/home/app/media
-   depends_on:
-     - web
-   restart: "on-failure"
+    # Build context
+    build: ./nginx
+
+    # Mapping machine and container ports
+    ports:
+      - 80:80
+      
+    # Storage volumes
+    volumes:
+      - static_volume:/home/app/static
+      - media_volume:/home/app/media
+    depends_on:
+      - web
+    restart: "on-failure"
 
 volumes:
- static_volume:
- media_volume:
+  static_volume:
+  media_volume:
 
 
 # version: '3.8'
