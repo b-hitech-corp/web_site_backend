@@ -12,6 +12,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      
+    - name: Set up Git
+      run: |
+        git config --global user.name "Mamadou Sadio"
+        git config --global user.email "devmodou@gmail.com"
 
     - name: Get latest tag
       id: latest_tag
