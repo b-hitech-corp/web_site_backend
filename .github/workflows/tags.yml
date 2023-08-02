@@ -24,7 +24,7 @@ jobs:
           raw=$(git branch -r --contains ${{ github.ref }})
           branch=${raw/origin\//}
 
-          if [[ $branch == "main" ]]; then
+          if [[ $branch == "master" ]]; then
             echo "true"
           else
             echo "false"
