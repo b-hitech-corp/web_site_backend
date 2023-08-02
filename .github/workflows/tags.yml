@@ -3,7 +3,7 @@ name: Increment Version and Create Tag
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
