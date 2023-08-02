@@ -21,27 +21,32 @@ jobs:
       - name: Run versioning script
         id: versioning
         run: |
-          raw=$(git branch -r --contains ${{ github.ref }})
+          raw=$(git branch -r --contains refs/heads/master)
           branch=${raw/origin\//}
-
+          
           if [[ $branch == "master" ]]; then
             echo "true"
           else
             echo "false"
           fi
-
+          
           echo "UPDATE_TAG=${GITHUB_REF#refs/tags/}" | tee -a $GITHUB_ENV
-
-          # Add versioning logic based on tags
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
-          if [[ -n "$LATEST_TAG" ]]; then
-            IFS='.' read -r -a VERSION_PARTS <<< "$LATEST_TAG"
-            NEW_PATCH_VERSION=$((VERSION_PARTS[2]+1))
-            NEW_TAG="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
-            echo "VERSIONED_TAG=$NEW_TAG" | tee -a $GITHUB_ENV
+          
+          # Check if tags are available before running git describe
+          if git tag &>/dev/null; then
+            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+            if [[ -n "$LATEST_TAG" ]]; then
+              IFS='.' read -r -a VERSION_PARTS <<< "$LATEST_TAG"
+              NEW_PATCH_VERSION=$((VERSION_PARTS[2]+1))
+              NEW_TAG="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
+              echo "VERSIONED_TAG=$NEW_TAG" | tee -a $GITHUB_ENV
+            else
+              echo "No tags found. Skipping versioning logic." | tee -a $GITHUB_ENV
+            fi
           else
             echo "No tags found. Skipping versioning logic." | tee -a $GITHUB_ENV
           fi
+
 
       - name: Output environment variables
         run: |
