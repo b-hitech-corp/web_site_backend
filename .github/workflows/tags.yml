@@ -1,54 +1,37 @@
-name: CI
+name: Increment Version and Create Tag
 
 on:
   push:
     branches:
-      - '*'
+      - main
 
 jobs:
-  tag-versioning:
+  build:
     runs-on: ubuntu-latest
-    name: Parse tag and versioning
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
+    - name: Get latest tag
+      id: latest_tag
+      run: |
+        git fetch --tags
+        latestTag=$(git describe --abbrev=0 --tags "0.0.0.*" 2>/dev/null) || latestTag="0.0.0.0"
+        echo "Latest tag: $latestTag"
+        echo "::set-output name=latest_tag::$latestTag"
 
-      - name: Run versioning script
-        id: versioning
-        run: |
-          raw=$(git branch -r --contains refs/heads/master)
-          branch=${raw/origin\//}
-          
-          if [[ $branch == "master" ]]; then
-            echo "true"
-          else
-            echo "false"
-          fi
-          
-          echo "UPDATE_TAG=${GITHUB_REF#refs/tags/}" | tee -a $GITHUB_ENV
-          
-          # Check if tags are available before running git describe
-          if git tag &>/dev/null; then
-            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
-            if [[ -n "$LATEST_TAG" ]]; then
-              IFS='.' read -r -a VERSION_PARTS <<< "$LATEST_TAG"
-              NEW_PATCH_VERSION=$((VERSION_PARTS[2]+1))
-              NEW_TAG="${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
-              echo "VERSIONED_TAG=$NEW_TAG" | tee -a $GITHUB_ENV
-            else
-              echo "No tags found. Skipping versioning logic." | tee -a $GITHUB_ENV
-            fi
-          else
-            echo "No tags found. Skipping versioning logic." | tee -a $GITHUB_ENV
-          fi
+    - name: Increment version
+      id: increment_version
+      run: |
+        previousTag=${{ steps.latest_tag.outputs.latest_tag }}
+        IFS='.' read -r -a versionParts <<< "${previousTag}"
+        nextVersion=$(printf "%d.%d.%d.%d" "${versionParts[0]}" "${versionParts[1]}" "${versionParts[2]}" "$((10#${versionParts[3]} + 1))")
+        echo "Next version: $nextVersion"
+        echo "::set-output name=next_version::$nextVersion"
 
-
-      - name: Output environment variables
-        run: |
-          echo "UPDATE_TAG=${{ env.UPDATE_TAG }}"
-          echo "VERSIONED_TAG=${{ env.VERSIONED_TAG }}"
+    - name: Create and push new tag
+      if: ${{ steps.increment_version.outputs.next_version != '0.0.0.0' }}
+      run: |
+        git tag -a ${{ steps.increment_version.outputs.next_version }} -m "Release ${{ steps.increment_version.outputs.next_version }}"
+        git push origin ${{ steps.increment_version.outputs.next_version }}
