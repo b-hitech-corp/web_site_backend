@@ -30,7 +30,7 @@ jobs:
             echo "false"
           fi
 
-          echo "UPDATE_TAG=$GITHUB_REF_NAME" | tee -a $GITHUB_ENV
+          echo "UPDATE_TAG=${GITHUB_REF#refs/tags/}" | tee -a $GITHUB_ENV
 
           # Add versioning logic based on tags
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
