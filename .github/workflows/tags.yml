@@ -1,4 +1,4 @@
-name: Increment Version and Create Tag
+name: Créer une Pull Request
 
 on:
   push:
@@ -6,37 +6,39 @@ on:
       - master
 
 jobs:
-  build:
+  create_pull_request:
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up Git
-      run: |
-        git config --global user.name "Mamadou Sadio"
-        git config --global user.email "devmodou@gmail.com"
+      - name: Checkout du code
+        uses: actions/checkout@v2
 
-    - name: Get latest tag
-      id: latest_tag
-      run: |
-        git fetch --tags
-        latestTag=$(git describe --abbrev=0 --tags "0.0.0.*" 2>/dev/null) || latestTag="0.0.0.0"
-        echo "Latest tag: $latestTag"
-        echo "::set-output name=latest_tag::$latestTag"
+      - name: Créer une nouvelle branche
+        run: git checkout -b dev
 
-    - name: Increment version
-      id: increment_version
-      run: |
-        previousTag=${{ steps.latest_tag.outputs.latest_tag }}
-        IFS='.' read -r -a versionParts <<< "${previousTag}"
-        nextVersion=$(printf "%d.%d.%d.%d" "${versionParts[0]}" "${versionParts[1]}" "${versionParts[2]}" "$((10#${versionParts[3]} + 1))")
-        echo "Next version: $nextVersion"
-        echo "::set-output name=next_version::$nextVersion"
+      - name: Faites vos modifications
+        run: |
+          # Effectuez vos modifications ici
+          echo "Mes modifications one" >> fichier.txt
 
-    - name: Create and push new tag
-      if: ${{ steps.increment_version.outputs.next_version != '0.0.0.0' }}
-      run: |
-        git tag -a ${{ steps.increment_version.outputs.next_version }} -m "Release ${{ steps.increment_version.outputs.next_version }}"
-        git push origin ${{ steps.increment_version.outputs.next_version }}
+      - name: Commit et Push des modifications
+        run: |
+          git add .
+          git commit -m "Ajouter mes modifications"
+          git push origin dev
+
+      - name: Créer une Pull Request
+        run: |
+          # Récupérer le nom de la branche actuelle
+          CURRENT_BRANCH=$(git branch --show-current)
+          
+          # Créer la Pull Request en utilisant l'API GitHub
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{
+              "title": "Ma nouvelle Pull Request",
+              "head": "dev",
+              "base": "main",
+              "body": "Description de la Pull Request"
+            }' \
+            "https://api.github.com/repos/b-hitech-corp/web_site_backend/pulls"
