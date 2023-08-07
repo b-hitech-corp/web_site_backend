@@ -13,6 +13,11 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v2
 
+      - name: Set up Git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "devmodou@gmail.com"
+
       - name: Créer une nouvelle branche
         run: git checkout -b dev
 
