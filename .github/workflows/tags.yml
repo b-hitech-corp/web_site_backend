@@ -1,8 +1,9 @@
 name: Manual Approval with Auto Tagging
+
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
