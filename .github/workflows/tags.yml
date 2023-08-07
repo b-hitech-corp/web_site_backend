@@ -1,49 +1,123 @@
-name: Créer une Pull Request
-
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  create_pull_request:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout du code
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # ... autres étapes de construction ...
+
+  staging-approval:
+    runs-on: ubuntu-latest
+    environment: 'Staging'
+    needs:
+      - build
+    timeout-minutes: 1  # Set a short timeout for the job
+    steps:
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Git
+      - name: Set deploy_approval to NO
+        run: echo "NO" > deploy_approval.txt
+
+      - name: Ask for staging deployment approval
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "devmodou@gmail.com"
+          deploy_approval=$(cat deploy_approval.txt)
 
-      - name: Créer une nouvelle branche
-        run: git checkout -b dev
+          if [[ "$deploy_approval" == "YES" ]]; then
+            echo "Staging deployment is approved."
+            echo "Proceeding with the deployment..."
+            
+            # Update the deploy_approval status to "YES" in the pull request
+            curl -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -d '{
+                "event": "APPROVE"
+              }' \
+              "https://api.github.com/repos/sencloudpl/workflow/pulls/$PULL_REQUEST_NUMBER/reviews"
 
-      - name: Faites vos modifications
+          else
+            echo "Staging deployment is not approved."
+            echo "Waiting for approval or timeout..."
+
+            # Sleep for 15 seconds
+            sleep 15
+
+            # Check if the approval is still not received
+            if [[ "$deploy_approval" != "YES" ]]; then
+              echo "Approval not received within the specified time."
+              echo "Skipping the staging deployment..."
+              exit 0
+            fi
+          fi
+
+  next-job:
+    needs:
+      - staging-approval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Next job step
+        run: echo "This is the next job."
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # ... other build steps ...
+
+  staging-approval:
+    runs-on: ubuntu-latest
+    environment: 'Staging'
+    needs:
+      - build
+    timeout-minutes: 1  # Set a short timeout for the job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set deploy_approval to NO
+        run: echo "NO" > deploy_approval.txt
+
+      - name: Ask for staging deployment approval
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          # Effectuez vos modifications ici
-          echo "Mes modifications one" >> fichier.txt
+          deploy_approval=$(cat deploy_approval.txt)
 
-      # - name: Commit et Push des modifications
-      #   run: |
-      #     git add .
-      #     git commit -m "Ajouter mes modifications"
-      #     git push origin dev
+          if [[ "$deploy_approval" == "YES" ]]; then
+            echo "Staging deployment is approved."
+            echo "Proceeding with the deployment..."
+            
+            # Update the deploy_approval status to "YES" in the pull request
+            curl -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -d '{
+                "event": "APPROVE"
+              }' \
+              "https://api.github.com/repos/b-hitech-corp/web_site_backend/pulls/$PULL_REQUEST_NUMBER/reviews"
 
-      - name: Créer une Pull Request
-        run: |
-          # Récupérer le nom de la branche actuelle
-          CURRENT_BRANCH=$(git branch --show-current)
-          
-          # Créer la Pull Request en utilisant l'API GitHub
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d '{
-              "title": "Ma nouvelle Pull Request",
-              "head": "dev",
-              "base": "main",
-              "body": "Description de la Pull Request"
-            }' \
-            "https://api.github.com/repos/b-hitech-corp/web_site_backend/pulls"
+          else
+            echo "Staging deployment is not approved."
+            echo "Waiting for approval or timeout..."
+
+            # Sleep for 15 seconds
+            sleep 15
+
+            # Check if the approval is still not received
+            if [[ "$deploy_approval" != "YES" ]]; then
+              echo "Approval not received within the specified time."
+              echo "Skipping the staging deployment..."
+              exit 0
+           
