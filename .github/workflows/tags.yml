@@ -26,11 +26,11 @@ jobs:
           # Effectuez vos modifications ici
           echo "Mes modifications one" >> fichier.txt
 
-      - name: Commit et Push des modifications
-        run: |
-          git add .
-          git commit -m "Ajouter mes modifications"
-          git push origin dev
+      # - name: Commit et Push des modifications
+      #   run: |
+      #     git add .
+      #     git commit -m "Ajouter mes modifications"
+      #     git push origin dev
 
       - name: Créer une Pull Request
         run: |
