@@ -53,8 +53,8 @@ jobs:
             echo "Staging deployment is not approved."
             echo "Waiting for approval or timeout..."
 
-            # Sleep for 15 seconds
-            sleep 15
+            # Sleep for 60 seconds
+            sleep 60
 
             # Check if the approval is still not received
             if [[ "$deploy_approval" != "YES" ]]; then
