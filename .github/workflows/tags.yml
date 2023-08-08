@@ -26,8 +26,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Set deploy_approval to NO
-      #   run: echo "NO" > deploy_approval.txt
+      - name: Set deploy_approval to NO
+        run: echo "NO" > deploy_approval.txt
 
       - name: Ask for staging deployment approval
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
