@@ -47,7 +47,7 @@ jobs:
               -d '{
                 "event": "APPROVE"
               }' \
-              "https://api.github.com/repos/sencloudpl/workflow/pulls/$PULL_REQUEST_NUMBER/reviews"
+              "https://api.github.com/repos/b-hitech-corp/web_site_backend/pulls/$PULL_REQUEST_NUMBER/reviews"
 
           else
             echo "Staging deployment is not approved."
