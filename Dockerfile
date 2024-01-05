@@ -2,7 +2,7 @@
 # Fetching official base image for python
 FROM python:3.11-alpine as web
 
-LABEL maintainer="Amadou Barry"
+LABEL maintainer="Amadou Diallo"
 
 # Setting up the work directory
 WORKDIR /home/app/
